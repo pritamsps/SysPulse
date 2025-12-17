@@ -34,4 +34,15 @@ async function startWorker() {
     console.log("Worker shutting down gracefully.");
     process.exit(0);
 }
+async function insertLog(logData) {
+    const query = `
+        INSERT INTO logs (service_name, level, message, metadata, timestamp) 
+        VALUES ($1, $2, $3, $4, $5)
+    `;
+    const values = [logData.service, logData.level, logData.message,logData.meta, logData.timestamp];
+    await pool.query(query, values);
+}
+
+
+
 startWorker();

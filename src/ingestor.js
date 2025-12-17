@@ -1,7 +1,7 @@
 const express = require("express");
 const { connectRedis,client } = require("./config/redis");
 require('dotenv').config();
-
+const pool = require('./db');
 const app = express();
 app.use(express.json());
 
@@ -27,6 +27,49 @@ app.post("/logs", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+app.get("/logs", async (req, res) => {
+    try {
+        const { level, search, startDate, endDate } = req.query;
+        
+        let sq = "SELECT * FROM logs"; // Base query
+        const conditions = [];
+        const values = [];
+
+        // 1. Build Conditions
+        if (level) {
+            values.push(level);
+            conditions.push(`level = $${values.length}`);
+        }
+        if (search) {
+            values.push(`%${search}%`);
+            conditions.push(`message ILIKE $${values.length}`);
+        }
+        if (startDate) {
+            values.push(startDate);
+            conditions.push(`"timestamp" >= $${values.length}`);
+        }
+        if (endDate) {
+            values.push(endDate);
+            conditions.push(`"timestamp" <= $${values.length}`);
+        }
+
+        // 2. Append WHERE clause if conditions exist
+        if (conditions.length > 0) {
+            sq += " WHERE " + conditions.join(" AND ");
+        }
+
+        // 3. Append ORDER BY (with a leading space!)
+        sq += " ORDER BY \"timestamp\" DESC LIMIT 50";
+
+        const result = await pool.query(sq, values);
+        res.json(result.rows);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
 app.listen(process.env.PORT, () => {
     console.log("SysPulse Ingestor service running on port 3000");
 });
