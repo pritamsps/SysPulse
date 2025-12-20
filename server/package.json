@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
  "scripts": {
-  "start": "node src/ingestor.js",  
-  "dev": "nodemon src/ingestor.js",
-  "worker": "node src/worker.js"    
+  "start": "node src/main.js",  
+  "dev": "nodemon src/ingestor.js"
 },
   "keywords": [],
   "author": "",
