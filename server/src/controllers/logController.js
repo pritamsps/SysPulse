@@ -1,14 +1,7 @@
-const express = require("express");
-const { connectRedis,client } = require("./config/redis");
-require('dotenv').config();
-const pool = require('./db');
-const app = express();
-app.use(express.json());
-
+const { client } = require('../config/redis');
+const pool = require('../db');
 const ALLOWED_LEVELS = ['INFO', 'WARN', 'ERROR', 'FATAL', 'DEBUG'];
-
-connectRedis();
-app.post("/logs", async (req, res) => {
+const postLog = async (req, res) => {
     const logData = req.body;
     if(!logData.service|| !logData.level || !logData.message){
         return res.status(400).json({ error: "Missing required log fields" });
@@ -26,8 +19,8 @@ app.post("/logs", async (req, res) => {
         console.error("Error ingesting log:", err);
         res.status(500).json({ error: "Internal Server Error" });
     }
-});
-app.get("/logs", async (req, res) => {
+};
+ const getLogs = async (req, res) => {
     try {
         const { level, search, startDate, endDate } = req.query;
         
@@ -68,8 +61,6 @@ app.get("/logs", async (req, res) => {
         console.error(err);
         res.status(500).json({ error: "Internal Server Error" });
     }
-});
+};
 
-app.listen(process.env.PORT, () => {
-    console.log("SysPulse Ingestor service running on port 3000");
-});
+module.exports = {postLog, getLogs};
