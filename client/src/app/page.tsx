@@ -23,6 +23,7 @@ interface FilterParams {
 }
 
 export default function SysPulseDashboard() {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
   const [logs, setLogs] = useState<Log[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,7 +58,7 @@ export default function SysPulseDashboard() {
       }
       params.append('limit', '50');
 
-      const url = `http://localhost:3000/logs?${params.toString()}`;
+      const url = `${API_BASE_URL}/logs?${params.toString()}`;
       setDebugInfo(`Fetching: ${url}`);
       
       console.log('Fetching logs from:', url);
@@ -72,7 +73,6 @@ export default function SysPulseDashboard() {
       
       console.log('Response status:', response.status);
       console.log('Response headers:', response.headers);
-      
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
@@ -182,7 +182,8 @@ export default function SysPulseDashboard() {
   // Test connection button
   const testConnection = async () => {
     try {
-      const response = await fetch('http://localhost:3000/logs?limit=1');
+      const response = await fetch(`${API_BASE_URL}/logs?limit=1`);
+      
       const data = await response.json();
       alert(`✓ Connection successful!\nReceived ${Array.isArray(data) ? data.length : 0} logs`);
       console.log('Test response:', data);
@@ -340,7 +341,7 @@ export default function SysPulseDashboard() {
             <div className="mt-3 text-sm text-red-300 space-y-1">
               <p>Troubleshooting steps:</p>
               <ol className="list-decimal list-inside space-y-1 ml-2">
-                <li>Verify backend is running: <code className="bg-slate-900 px-2 py-0.5 rounded">curl http://localhost:3000/logs</code></li>
+                <li>Verify backend is running: <code className="bg-slate-900 px-2 py-0.5 rounded">curl {API_BASE_URL}/logs</code></li>
                 <li>Check browser console (F12) for CORS errors</li>
                 <li>Add CORS to backend: <code className="bg-slate-900 px-2 py-0.5 rounded">app.use(cors())</code></li>
                 <li>Click "Test Connection" button above</li>
@@ -354,7 +355,7 @@ export default function SysPulseDashboard() {
           <div className="bg-slate-800 rounded-lg p-12 text-center border border-slate-700">
             <RefreshCw className="w-12 h-12 text-slate-400 mx-auto mb-4 animate-spin" />
             <p className="text-slate-400">Connecting to backend...</p>
-            <p className="text-sm text-slate-500 mt-2">http://localhost:3000/logs</p>
+            <p className="text-sm text-slate-500 mt-2">curl {API_BASE_URL}/logs</p>
           </div>
         ) : filteredLogs.length === 0 ? (
           /* Empty State */
