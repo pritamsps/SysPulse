@@ -332,24 +332,26 @@ export default function SysPulseDashboard() {
         </div>
 
         {/* Error State */}
+
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 mb-6">
-            <div className="flex items-center gap-2 text-red-400">
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 mb-6">
+            <div className="flex items-center gap-2 text-amber-400">
               <AlertCircle className="w-5 h-5" />
-              <span className="font-medium">Connection Error: {error}</span>
+              <span className="font-medium">Service Temporarily Unavailable</span>
             </div>
-            <div className="mt-3 text-sm text-red-300 space-y-1">
-              <p>Troubleshooting steps:</p>
-              <ol className="list-decimal list-inside space-y-1 ml-2">
-                <li>Verify backend is running: <code className="bg-slate-900 px-2 py-0.5 rounded">curl {API_BASE_URL}/logs</code></li>
-                <li>Check browser console (F12) for CORS errors</li>
-                <li>Add CORS to backend: <code className="bg-slate-900 px-2 py-0.5 rounded">app.use(cors())</code></li>
-                <li>Click "Test Connection" button above</li>
-              </ol>
+            <div className="mt-3 text-sm text-amber-300/80 space-y-2">
+              <p>
+                The backend server is currently <strong>suspended</strong> to optimize resource usage on the free tier.
+              </p>
+              <p>
+                If you are testing this project, please contact the developer to resume the service, or try again later.
+              </p>
+              <div className="mt-2 text-xs font-mono bg-amber-950/30 p-2 rounded text-amber-500">
+                System Status: Offline / Sleeping 💤
+              </div>
             </div>
           </div>
         )}
-
         {/* Loading State */}
         {loading && logs.length === 0 ? (
           <div className="bg-slate-800 rounded-lg p-12 text-center border border-slate-700">
