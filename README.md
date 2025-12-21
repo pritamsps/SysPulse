@@ -73,10 +73,10 @@ PORT=3000
 
 # Database Connection
 # IMPORTANT: Use the Transaction Pooler URL (Port 6543) for IPv4 compatibility on Render
-DATABASE_URL=postgres://postgres.xxxx:password@aws-0-region.pooler.supabase.com:6543/postgres
+DATABASE_URL= <your Database connection string - PostgreSQL DB preferred>
 
 # Redis Connection
-REDIS_URL=redis://default:password@your-upstash-instance.upstash.io:6379
+REDIS_URL= < your Redis connection string ( Cloud service o r open source - Redis cloud,Upstash,etc.) >
 ```
 
 #### 2. Frontend Variables
@@ -84,8 +84,7 @@ REDIS_URL=redis://default:password@your-upstash-instance.upstash.io:6379
 Create a `.env.local` file in the `client` directory:
 
 ```bash
-# URL of your deployed Backend (No trailing slash)
-# For local development, use http://localhost:3000
+# For local development, it use http://localhost:3000 automatically.
 NEXT_PUBLIC_API_URL=https://syspulse-api.onrender.com
 ```
 
